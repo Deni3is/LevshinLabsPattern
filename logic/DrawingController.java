@@ -68,7 +68,7 @@ public class DrawingController {
 	public void moveSelectedShapes(Point movement) {
 		if (!selection.isEmpty()) {
 			DrawAction move = new MoveAction(selection, movement);
-			undoManager.addAction(move);
+//			undoManager.addAction(move);
 			move.execute();
 		}
 	}
