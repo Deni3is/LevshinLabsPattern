@@ -4,33 +4,28 @@ import logic.Drawing;
 import shapes.Shape;
 
 /**
- * AddAction implements a single undoable action where a Shape is added to a
- * Drawing.
+ * События добавления объекта на рисунов
  */
 public class AddAction implements DrawAction {
 
-	Drawing d;
-	Shape s;
-
+	Shape shape;
+	Drawing drawing;
 	/**
-	 * Creates an AddAction that adds the given Shape to the given Drawing.
-	 * 
-	 * @param dr
-	 *            the drawing into which the shape should be added.
-	 * @param sh
-	 *            the shape to be added.
+	 * Конструктор
+	 * @param drawing - полотно
+	 * @param shape - фигура
 	 */
-	public AddAction(Drawing dr, Shape sh) {
-		this.d = dr;
-		this.s = sh;
+	public AddAction(Drawing drawing, Shape shape) {
+		this.drawing = drawing;
+		this.shape = shape;
 	}
 
-	public void execute() {
-		d.insertShape(s);
-	}
-
-	public String getDescription() {
-		return null;
+	public Boolean execute() {
+		Boolean checkForExecution = shape != null && drawing != null;
+		if (checkForExecution) {
+			drawing.insertShape(shape);
+		}
+		return checkForExecution;
 	}
 
 	public void redo() {
@@ -38,7 +33,11 @@ public class AddAction implements DrawAction {
 	}
 
 	public void undo() {
-		d.removeShape(s);
+		drawing.removeShape(shape);
+	}
+
+	public String getDescription() {
+		return null;
 	}
 
 }

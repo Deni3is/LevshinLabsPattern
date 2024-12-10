@@ -1,41 +1,43 @@
 package actions;
 
-import java.awt.Color;
-
+import logic.Selection;
 import shapes.Shape;
 
-/**
- * DeleteAction implements a single undoable action where the color of a Shape
- * are changed.
- */
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * Меняет цвет выбранных фигур
+ */
 public class ColorAction implements DrawAction {
 
-	Shape shape;
+	private Map<Shape, Color> oldColors = new HashMap<>();
 
-	Color oldColor;
-	Color newColor;
+	private Color newColor;
+	private Selection selection;
 
 	/**
-	 * Creates an ColorAction that changes the color of a given Shape.
-	 * 
-	 * @param s
-	 *            the shape to be modified.
-	 * @param newColor
-	 *            the new color for the shape.
+	 * Конструктор
+	 * @param selection - выбранные фигуры
+	 * @param newColor - новый цвет
 	 */
-	public ColorAction(Shape s, Color newColor) {
-		shape = s;
-		this.oldColor = s.getColor();
+	public ColorAction(Selection selection, Color newColor) {
+		this.selection = selection.clone();
+		this.selection.forEach(item -> {
+			this.oldColors.put(item, item.getColor());
+		});
 		this.newColor = newColor;
 	}
 
-	public void execute() {
-		shape.setColor(newColor);
-	}
-
-	public String getDescription() {
-		return null;
+	public Boolean execute() {
+		Boolean checkForExecution = selection != null && !selection.isEmpty() && newColor != null;
+		if (checkForExecution) {
+			this.selection.forEach(item -> {
+					item.setColor(newColor);
+			});
+		}
+		return checkForExecution;
 	}
 
 	public void redo() {
@@ -43,7 +45,13 @@ public class ColorAction implements DrawAction {
 	}
 
 	public void undo() {
-		shape.setColor(oldColor);
+		this.selection.forEach(item -> {
+			item.setColor(this.oldColors.get(item));
+		});
+	}
+
+	public String getDescription() {
+		return null;
 	}
 
 }

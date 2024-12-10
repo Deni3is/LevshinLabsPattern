@@ -1,19 +1,11 @@
 package logic;
 
-import gui.DrawGUI;
-
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-
-import shapes.Shape;
-import actions.AddAction;
-import actions.ColorAction;
-import actions.DeleteAction;
+import actions.*;
 import actions.DrawAction;
-import actions.FillAction;
-import actions.MoveAction;
-import actions.UndoManager;
+import gui.DrawGUI;
+import shapes.Shape;
+
+import java.awt.*;
 
 public class DrawingController {
 
@@ -32,25 +24,25 @@ public class DrawingController {
 	}
 
 	public void addShape(Shape s) {
-		DrawAction add = new AddAction(drawing, s);
-		add.execute();
-		undoManager.addAction(add);
-
+		DrawAction action = new AddAction(drawing, s);
+		if (action.execute()) {
+			undoManager.addAction(action);
+		}
 	}
 
 	public void colorSelectedShapes(Color c) {
-		for (Shape s : selection) {
-			DrawAction col = new ColorAction(s, c);
-			col.execute();
-			undoManager.addAction(col);
+		ColorAction action = new ColorAction(selection, c);
+		if (action.execute()) {
+			undoManager.addAction(action);
 		}
 	}
 
 	public void deleteSelectedShapes() {
-		DrawAction del = new DeleteAction(drawing, selection);
-		del.execute();
-		undoManager.addAction(del);
-		drawing.repaint();
+		DrawAction action = new DeleteAction(drawing, selection);
+		if (action.execute()) {
+			undoManager.addAction(action);
+			drawing.repaint();
+		}
 	}
 
 	public Drawing getDrawing() {
@@ -65,24 +57,23 @@ public class DrawingController {
 		return tool;
 	}
 
+	//Заменили
 	public void moveSelectedShapes(Point movement) {
-		if (!selection.isEmpty()) {
-			DrawAction move = new MoveAction(selection, movement);
-			move.execute();
+		DrawAction action = new MoveAction(selection, movement);
+		if (action.execute()) {
+			undoManager.addAction(action);
 		}
+	}
+
+
+	public void endOfActionRecording() {
+		undoManager.endOfActionRecording();
 	}
 
 	public void newDrawing(Dimension size) {
 		drawing = new Drawing(size);
 		if (gui != null) {
 			gui.updateDrawing();
-		}
-	}
-
-	public void recordMovement(Point movement) {
-		if (!selection.isEmpty()) {
-			DrawAction move = new MoveAction(selection, movement);
-			undoManager.addAction(move);
 		}
 	}
 
@@ -107,9 +98,10 @@ public class DrawingController {
 	}
 
 	public void toggleFilled() {
-		DrawAction toggle = new FillAction(selection);
-		toggle.execute();
-		undoManager.addAction(toggle);
+		DrawAction action = new FillAction(selection);
+		if (action.execute()) {
+			undoManager.addAction(action);
+		}
 	}
 
 	public void undo() {

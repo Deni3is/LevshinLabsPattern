@@ -1,43 +1,59 @@
 package actions;
 
-import java.awt.Point;
-
 import logic.Selection;
 import shapes.Shape;
 
-/**
- * MoveAction implements a single undoable action where all the Shapes in a
- * given Selection are moved.
- */
-public class MoveAction implements DrawAction {
+import java.awt.*;
 
-	Selection selected;
+/**
+ * Перемещение выбранных фигур
+ */
+public class MoveAction implements MergeableAction, DrawAction {
+
+	private Selection selection;
 	Point movement;
 
+	Boolean canMerge = true;
+
 	/**
-	 * Creates a MoveAction that moves all Shapes in the given Selection in the
-	 * direction given by the point. The movement is relative to the shapes
-	 * original position.
-	 * 
-	 * @param s
-	 *            a selection which contains the shapes to be moved
-	 * @param m
-	 *            the amount the shapes should be moved, relative to the
-	 *            original position
+	 * Конструктор
+	 * @param selection - выбранные фигуры
+	 * @param movement - смещение (x, y)
 	 */
-	public MoveAction(Selection s, Point m) {
-		this.selected = s.clone();
-		this.movement = m;
+	public MoveAction(Selection selection, Point movement) {
+		this.selection = selection.clone();
+		this.movement = movement;
 	}
 
-	public void execute() {
-		for (Shape s : selected) {
-			s.move(movement.x, movement.y);
+	public Boolean execute() {
+		Boolean checkForExecution = selection != null && !selection.isEmpty() && movement != null
+				&& (movement.x != 0 || movement.y != 0);
+		if (checkForExecution) {
+			for (Shape s : selection) {
+				s.move(movement.x, movement.y);
+			}
 		}
+		return checkForExecution;
 	}
 
-	public String getDescription() {
-		return null;
+	@Override
+	public Boolean merge(MergeableAction action) {
+		Boolean checkForMerge = action instanceof MoveAction && canMerge;
+		if (checkForMerge) {
+			this.movement.x += ((MoveAction) action).movement.x;
+			this.movement.y += ((MoveAction) action).movement.y;
+		}
+		return checkForMerge;
+	}
+
+	@Override
+	public void stopMerge() {
+		canMerge = false;
+	}
+
+	@Override
+	public Boolean canMerge() {
+		return canMerge;
 	}
 
 	public void redo() {
@@ -45,9 +61,13 @@ public class MoveAction implements DrawAction {
 	}
 
 	public void undo() {
-		for (Shape s : selected) {
+		for (Shape s : selection) {
 			s.move(-movement.x, -movement.y);
 		}
+	}
+
+	public String getDescription() {
+		return null;
 	}
 
 }

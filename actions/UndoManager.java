@@ -36,9 +36,30 @@ public class UndoManager {
 	 * @param action
 	 *            the UndoableAction to be added.
 	 */
+
+	//Change
 	public void addAction(DrawAction action) {
 		this.redoStack.clear();
+		DrawAction lastAction = null;
+		if (!undoStack.isEmpty()) {
+			lastAction = undoStack.peek();
+		}
+		if (lastAction instanceof MergeableAction && action instanceof MergeableAction) {
+			if (((MergeableAction) lastAction).merge(((MergeableAction) action))) {
+				return;
+			}
+		}
 		this.undoStack.push(action);
+	}
+
+	/**
+	 * point last activity
+	 */
+	public void endOfActionRecording() {
+		DrawAction action = undoStack.peek();
+		if (action instanceof MergeableAction) {
+			((MergeableAction) action).stopMerge();
+		}
 	}
 
 	/**
