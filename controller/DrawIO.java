@@ -1,4 +1,4 @@
-package logic;
+package controller;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,11 +14,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-import shapes.Circle;
-import shapes.Line;
-import shapes.Rectangle;
-import shapes.Shape;
-import shapes.Text;
+import model.*;
 
 public class DrawIO {
 

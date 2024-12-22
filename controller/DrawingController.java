@@ -1,9 +1,11 @@
-package logic;
+package controller;
 
-import actions.*;
-import actions.DrawAction;
-import gui.DrawGUI;
-import shapes.Shape;
+import model.Drawing;
+import model.Selection;
+import controller.actions.*;
+import controller.actions.DrawAction;
+import view.DrawGUI;
+import model.Shape;
 
 import java.awt.*;
 

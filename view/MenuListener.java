@@ -1,6 +1,6 @@
-package gui;
+package view;
 
-import gui.MainMenu.NewDrawingDialog;
+import view.MainMenu.NewDrawingDialog;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -12,11 +12,11 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import logic.DrawIO;
-import logic.DrawingController;
+import controller.DrawIO;
+import controller.DrawingController;
 
 /**
- * Listens to actions from the buttons in a menu and modifies the Drawing
+ * Listens to controller.actions from the buttons in a menu and modifies the Drawing
  * through a DrawingController
  * 
  * @author Alex Lagerstedt

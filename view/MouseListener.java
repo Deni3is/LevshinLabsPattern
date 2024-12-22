@@ -1,10 +1,10 @@
-package gui;
+package view;
 
-import logic.DrawingController;
-import logic.Tool;
-import shapes.Rectangle;
-import shapes.Shape;
-import shapes.*;
+import controller.DrawingController;
+import controller.Tool;
+import model.Rectangle;
+import model.Shape;
+import model.*;
 
 import java.awt.*;
 import java.awt.event.InputEvent;

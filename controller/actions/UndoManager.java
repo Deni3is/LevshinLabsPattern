@@ -1,11 +1,11 @@
-package actions;
+package controller.actions;
 
 import java.util.Stack;
 
 /**
  * UndoManager is a simplistic reusable component to support an undo-redo
  * mechanism. UndoableActions can be added in the manager, which gives a
- * centered interface for performing their undo and redo actions.
+ * centered interface for performing their undo and redo controller.actions.
  * 
  * 
  * !!!!!!!!!!!!!!! Mostly copied from exercise 2.2 & 2.3

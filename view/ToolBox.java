@@ -1,4 +1,4 @@
-package gui;
+package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,8 +25,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import logic.DrawingController;
-import logic.Tool;
+import controller.DrawingController;
+import controller.Tool;
 
 public class ToolBox extends JToolBar implements ActionListener,
 		ChangeListener, ItemListener {

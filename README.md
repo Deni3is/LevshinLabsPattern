@@ -4,4 +4,4 @@ Build:
 
 Run:
 
-	java gui/DrawGUI
+	java view/DrawGUI

@@ -79,7 +79,7 @@
 			<p><em>Draw</em>:n käyttöliittymä, piirustus ja piirustuksen muokkaus on pyritty erottelemaan toisistaan model-view-controller-arkkitehtuurin mukaisesti.</p>
 			<p>Luokkajako karkeasti</p>
 			<ul>
-				<li>Käyttöliittymä (<code>gui.</code>)
+				<li>Käyttöliittymä (<code>view.</code>)
 				<ul>
 					<li><code>MainMenu</code> päävalikko</li>
 					<li><code>ToolBox</code> työkalupalkki</li>
@@ -97,7 +97,7 @@
 				</ul>
 				</li>
 
-				<li>Piirustuksen sisältämät elementit (<code>shapes.</code>)
+				<li>Piirustuksen sisältämät elementit (<code>model.</code>)
 				<ul>
 					<li><code>Shape</code> abstrakti pohjaluokka kaikille muodoille</li>
 					<li><code>FillableShape</code> abstrakti pohjaluokka täytettäville muodoille</li>
@@ -105,7 +105,7 @@
 				</ul>
 				</li>
 
-				<li>Muokkaustapahtumat ja undo sekä redo (<code>actions.</code>)
+				<li>Muokkaustapahtumat ja undo sekä redo (<code>controller.actions.</code>)
 				<ul>
 					<li><code>UndoManager</code> vastaa piirustukseen vaikuttavien muutosten tallentamisesta ja undo- sekä redo-toiminnallisuudesta</li>
 					<li><code>DrawAction</code> rajapinta, kuvaa peruutettavaa piirustuksen muokkaustapahtumaa</li>

@@ -1,8 +1,8 @@
-package actions;
+package controller.actions;
 
-import logic.Drawing;
-import logic.Selection;
-import shapes.Shape;
+import model.Drawing;
+import model.Selection;
+import model.Shape;
 
 /**
  * Удаление выбранных фигур с рисунка

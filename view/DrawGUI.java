@@ -1,4 +1,4 @@
-package gui;
+package view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -11,8 +11,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import logic.Drawing;
-import logic.DrawingController;
+import model.Drawing;
+import controller.DrawingController;
 
 /**
  * Graphical user interface for the Drawing editor "Draw"

@@ -1,7 +1,7 @@
-package actions;
+package controller.actions;
 
-import logic.Drawing;
-import shapes.Shape;
+import model.Drawing;
+import model.Shape;
 
 /**
  * События добавления объекта на рисунов

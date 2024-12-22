@@ -1,7 +1,7 @@
-package actions;
+package controller.actions;
 
-import logic.Selection;
-import shapes.Shape;
+import model.Selection;
+import model.Shape;
 
 import java.awt.*;
 

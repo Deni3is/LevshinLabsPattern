@@ -1,4 +1,4 @@
-package logic;
+package model;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,8 +10,6 @@ import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-
-import shapes.Shape;
 
 public class Drawing extends JPanel implements Iterable<Shape> {
 
