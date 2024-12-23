@@ -19,13 +19,7 @@ import model.*;
 public class DrawIO {
 
 	public void export(File f, DrawingController c) {
-		try {
-			c.getSelection().empty();
-			BufferedImage bi = c.getDrawing().getImage(); // retrieve image
-			ImageIO.write(bi, "png", f);
-		}
-		catch (IOException e) {
-		}
+		c.getStateAdapter().writeImgToFile(f);
 	}
 
 	public Point getPoint(String str) {
@@ -42,8 +36,8 @@ public class DrawIO {
 			BufferedReader in = new BufferedReader(new FileReader(f));
 			String str;
 
-			Point p = getPoint(in.readLine());
-			c.newDrawing(new Dimension(p.x, p.y));
+			//Point p = getPoint(in.readLine());
+			c.newDrawing();
 
 			while ((str = in.readLine()) != null) {
 				try {
@@ -62,29 +56,38 @@ public class DrawIO {
 					if (parts[0].equals("rect")) {
 						boolean fill = Integer.parseInt(parts[4].trim()) == 0 ? false
 								: true;
-						sh = new Rectangle(p1.x, p1.y, fill);
+
+						sh = c.getDrawing().getShapePrototype(ShapeType.Rectangle);
+
+						sh = ((Rectangle) sh).setFilled(fill);
 					}
 					else if (parts[0].equals("circ")) {
 						boolean fill = Integer.parseInt(parts[4].trim()) == 0 ? false
 								: true;
-						sh = new Circle(p1.x, p1.y, fill);
+
+						sh = c.getDrawing().getShapePrototype(ShapeType.Circle);
+
+						sh = ((Circle) sh).setFilled(fill);
 					}
 					else if (parts[0].equals("line")) {
-						sh = new Line(p1.x, p1.y);
+						sh = c.getDrawing().getShapePrototype(ShapeType.Line);
 					}
 					else if (parts[0].equals("text")) {
 						int fontSize = Integer.parseInt(parts[4].trim());
-						sh = new Text(p1.x, p1.y, fontSize, parts[5]);
+
+						sh = c.getDrawing().getShapePrototype(ShapeType.Text);
+						sh = ((Text) sh).setFont(fontSize);
+						sh = ((Text) sh).setText(parts[5]);
 					}
 					else {
 						throw new ArrayIndexOutOfBoundsException();
 					}
 
 					if (sh != null) {
-						sh.setPoint2(p2);
-						sh
-								.setColor(new Color(Integer.parseInt(parts[3]
-										.trim())));
+						sh = sh.setPoint1(p1);
+						sh = sh.setPoint2(p2);
+						sh = sh.setColor(new Color(Integer.parseInt(parts[3]
+								.trim())));
 						c.getDrawing().insertShape(sh);
 					}
 				}
@@ -107,13 +110,10 @@ public class DrawIO {
 	}
 
 	public void save(File f, DrawingController c) {
-		Drawing d = c.getDrawing();
+		VectorDrawing d = c.getDrawing();
 
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(f));
-
-			out.write(d.getPreferredSize().width + ","
-					+ d.getPreferredSize().height + "\n");
 
 			for (Shape s : c.getDrawing()) {
 				out.write(s.toString() + "\n");
@@ -128,3 +128,4 @@ public class DrawIO {
 
 	}
 }
+

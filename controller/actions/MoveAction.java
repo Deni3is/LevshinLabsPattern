@@ -1,68 +1,43 @@
 package controller.actions;
 
+import controller.DrawingController;
+import model.ImmutableSelection;
 import model.Selection;
 import model.Shape;
+import model.VectorDrawing;
 
 import java.awt.*;
 
 /**
  * Перемещение выбранных фигур
  */
-public class MoveAction implements MergeableAction, DrawAction {
+public class MoveAction implements DrawAction,MoveUpdate {
 
-	private Selection selection;
+	ImmutableSelection selected;
 	Point movement;
 
-	Boolean canMerge = true;
+	VectorDrawing d;
 
 	/**
-	 * Конструктор
-	 * @param selection - выбранные фигуры
-	 * @param movement - смещение (x, y)
+	 * Creates a MoveAction that moves all Shapes in the given Selection in the
+	 * direction given by the point. The movement is relative to the shapes
+	 * original position.
+	 *
+	 * @param s
+	 *            a selection which contains the shapes to be moved
+	 * @param m
+	 *            the amount the shapes should be moved, relative to the
+	 *            original position
 	 */
-	public MoveAction(Selection selection, Point movement) {
-		this.selection = selection.clone();
-		this.movement = movement;
+	public MoveAction(ImmutableSelection s, Point m, VectorDrawing d) {
+		this.selected = s;
+		this.movement = m;
+		this.d = d;
 	}
 
-	public Boolean execute() {
-		Boolean checkForExecution = selection != null && !selection.isEmpty() && movement != null
-				&& (movement.x != 0 || movement.y != 0);
-		if (checkForExecution) {
-			for (Shape s : selection) {
-				s.move(movement.x, movement.y);
-			}
-		}
-		return checkForExecution;
-	}
-
-	@Override
-	public Boolean merge(MergeableAction action) {
-		Boolean checkForMerge = action instanceof MoveAction && canMerge;
-		if (checkForMerge) {
-			this.movement.x += ((MoveAction) action).movement.x;
-			this.movement.y += ((MoveAction) action).movement.y;
-		}
-		return checkForMerge;
-	}
-
-	@Override
-	public void stopMerge() {
-		canMerge = false;
-	}
-
-	@Override
-	public Boolean canMerge() {
-		return canMerge;
-	}
-
-	public void redo() {
-		execute();
-	}
-
-	public void undo() {
-		for (Shape s : selection) {
-			s.move(-movement.x, -movement.y);
+	public void execute() {
+		for (Shape s : selected) {
+			d.moveShape(s, movement);
 		}
 	}
 
@@ -70,4 +45,20 @@ public class MoveAction implements MergeableAction, DrawAction {
 		return null;
 	}
 
+	public void redo() {
+		execute();
+	}
+
+	public void undo() {
+		Point reverseMovement = new Point(-movement.x, -movement.y);
+
+		for (Shape s : selected) {
+			d.moveShape(s, reverseMovement);
+		}
+	}
+
+	public MoveAction moveUpdate(Point m) {
+		Point newPoint = new Point(this.movement.x + m.x, this.movement.y + m.y);
+		return new MoveAction(this.selected, newPoint, d);
+	}
 }

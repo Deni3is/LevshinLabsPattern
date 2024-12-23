@@ -1,5 +1,6 @@
 package controller.actions;
 
+import java.awt.*;
 import java.util.Stack;
 
 /**
@@ -22,6 +23,8 @@ public class UndoManager {
 	private Stack<DrawAction> undoStack;
 	private Stack<DrawAction> redoStack;
 
+	private DrawAction lastAction;
+
 	/**
 	 * Constructs a empty Undo Manager.
 	 */
@@ -32,53 +35,38 @@ public class UndoManager {
 
 	/**
 	 * Adds a new undoable action into this Undo Manager.
-	 * 
+	 *
 	 * @param action
 	 *            the UndoableAction to be added.
 	 */
-
-	//Change
 	public void addAction(DrawAction action) {
 		this.redoStack.clear();
-		DrawAction lastAction = null;
-		if (!undoStack.isEmpty()) {
-			lastAction = undoStack.peek();
-		}
-		if (lastAction instanceof MergeableAction && action instanceof MergeableAction) {
-			if (((MergeableAction) lastAction).merge(((MergeableAction) action))) {
-				return;
-			}
-		}
-		this.undoStack.push(action);
-	}
 
-	/**
-	 * point last activity
-	 */
-	public void endOfActionRecording() {
-		DrawAction action = undoStack.peek();
-		if (action instanceof MergeableAction) {
-			((MergeableAction) action).stopMerge();
+		if (lastAction != null) {
+			this.undoStack.push(lastAction);
+			lastAction = action;
+		} else {
+			lastAction = action;
 		}
 	}
 
 	/**
 	 * Tests if an redo operation can be performed at this moment.
-	 * 
+	 *
 	 * @return boolean value telling if a redo is possible to perform.
 	 */
 
 	public boolean canRedo() {
-		return !this.redoStack.isEmpty();
+		return !this.redoStack.isEmpty() ;
 	}
 
 	/**
 	 * Tests if an undo operation can be performed at this moment.
-	 * 
+	 *
 	 * @return boolean value telling if an undo is possible to perform.
 	 */
 	public boolean canUndo() {
-		return !this.undoStack.isEmpty();
+		return !this.undoStack.isEmpty() || lastAction != null;
 	}
 
 	/**
@@ -96,9 +84,25 @@ public class UndoManager {
 	 * the undo stack.
 	 */
 	public void undo() {
-		DrawAction action = this.undoStack.pop();
+		DrawAction action;
+
+		if (lastAction == null) {
+			action = this.undoStack.pop();
+		} else {
+			action = lastAction;
+			lastAction = null;
+		}
 		action.undo();
 		this.redoStack.push(action);
 	}
 
+	public void updateMoveUpdatableAction(Point m) {
+		if (lastAction instanceof MoveUpdate) {
+			lastAction.undo();
+			lastAction = ((MoveUpdate) lastAction).moveUpdate(m);
+			lastAction.execute();
+		} else {
+//			throw new IllegalStateException();
+		}
+	}
 }

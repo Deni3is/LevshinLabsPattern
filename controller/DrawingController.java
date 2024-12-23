@@ -1,6 +1,8 @@
 package controller;
 
-import model.Drawing;
+import controller.states.*;
+import model.ImmutableSelection;
+import model.VectorDrawing;
 import model.Selection;
 import controller.actions.*;
 import controller.actions.DrawAction;
@@ -8,72 +10,115 @@ import view.DrawGUI;
 import model.Shape;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DrawingController {
 
-	private Drawing drawing;
+	private VectorDrawing drawing;
 	private UndoManager undoManager;
-	private Selection selection;
+
 	private DrawGUI gui;
 	private Tool tool;
 
-	public DrawingController(DrawGUI g) {
+	private boolean fill;
+	private Color color;
+	private int fontSize;
+
+	private ArrayList<DrawingControllerListener> listeners;
+	private StateAdapter stateAdapter;
+
+	private HashMap<Tool, DrawingState> states;
+
+	public DrawingController(DrawGUI g, StateAdapter adapter) {
 		drawing = null;
 		undoManager = new UndoManager();
-		selection = new Selection();
 		gui = g;
 		tool = Tool.LINE;
+		stateAdapter = adapter;
+
+		states = new HashMap<Tool, DrawingState>();
+
+		states.put(Tool.SELECT, new SelectState(this));
+		states.put(Tool.CIRCLE, new NewCircleState(this));
+		states.put(Tool.LINE, new NewLineState(this));
+		states.put(Tool.RECTANGLE, new NewRectangleState(this));
+		states.put(Tool.SQUARE, new NewRectangleState(this));
+		states.put(Tool.TEXT, new NewTextState(this));
+
+		listeners = new ArrayList<DrawingControllerListener>();
 	}
 
-	public void addShape(Shape s) {
-		DrawAction action = new AddAction(drawing, s);
-		if (action.execute()) {
-			undoManager.addAction(action);
-		}
-	}
-
-	public void colorSelectedShapes(Color c) {
-		ColorAction action = new ColorAction(selection, c);
-		if (action.execute()) {
-			undoManager.addAction(action);
-		}
-	}
-
-	public void deleteSelectedShapes() {
-		DrawAction action = new DeleteAction(drawing, selection);
-		if (action.execute()) {
-			undoManager.addAction(action);
-			drawing.repaint();
-		}
-	}
-
-	public Drawing getDrawing() {
+	public VectorDrawing getDrawing() {
 		return drawing;
 	}
 
-	public Selection getSelection() {
-		return selection;
+	public ImmutableSelection getSelection() {
+		return drawing.getSelection();
 	}
 
 	public Tool getTool() {
 		return tool;
 	}
 
-	//Заменили
-	public void moveSelectedShapes(Point movement) {
-		DrawAction action = new MoveAction(selection, movement);
-		if (action.execute()) {
-			undoManager.addAction(action);
-		}
+	public void addAction(DrawAction action) {
+		action.execute();
+		undoManager.addAction(action);
 	}
 
-
-	public void endOfActionRecording() {
-		undoManager.endOfActionRecording();
+	public DrawingState getState() {
+		return states.get(tool);
 	}
 
-	public void newDrawing(Dimension size) {
-		drawing = new Drawing(size);
+	public DrawGUI getGui() {
+		return gui;
+	}
+
+	public void setColor(Color c) {
+		color = c;
+
+		getState().processUpdateColor(color);
+
+		fireColorChanged(getColor());
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setFill(boolean f) {
+		fill = f;
+
+		getState().processUpdateIsFill();
+
+		fireFillChanged(getFill());
+	}
+
+	public boolean getFill() {
+		return fill;
+	}
+
+	public void setFontSize(int f) {
+		fontSize = f;
+
+		fireFontSizeChanged(getFontSize());
+	}
+
+	public int getFontSize() {
+		return fontSize;
+	}
+
+	public StateAdapter getStateAdapter() {
+		return stateAdapter;
+	}
+
+	public void updateUpdatableAction(Point movement) {
+		undoManager.updateMoveUpdatableAction(movement);
+	}
+
+	public void newDrawing() {
+		drawing = new VectorDrawing();
+		undoManager = new UndoManager();
 		if (gui != null) {
 			gui.updateDrawing();
 		}
@@ -83,33 +128,45 @@ public class DrawingController {
 		if (this.undoManager.canRedo()) {
 			this.undoManager.redo();
 		}
-		drawing.repaint();
-	}
-
-	public void selectAll() {
-		selection.empty();
-		for (Shape sh : drawing) {
-			selection.add(sh);
-		}
-		drawing.repaint();
-
 	}
 
 	public void setTool(Tool t) {
 		this.tool = t;
 	}
 
-	public void toggleFilled() {
-		DrawAction action = new FillAction(selection);
-		if (action.execute()) {
-			undoManager.addAction(action);
-		}
-	}
 
 	public void undo() {
 		if (this.undoManager.canUndo()) {
 			this.undoManager.undo();
 		}
-		drawing.repaint();
+	}
+
+	public void addListener(DrawingControllerListener listener) {
+		if (! listeners.contains(listener)) {
+			listeners.add(listener);
+		}
+	}
+
+	public void removeListener(DrawingControllerListener listener) {
+		listeners.remove(listener);
+	}
+
+	private void fireColorChanged(Color color) {
+		for (DrawingControllerListener listener : listeners) {
+			listener.colorChanged(color);
+		}
+	}
+
+	private void fireFillChanged(boolean fill) {
+		for (DrawingControllerListener listener : listeners) {
+			listener.fillChanged(fill);
+		}
+	}
+
+	private void fireFontSizeChanged(int fontSize) {
+		for (DrawingControllerListener listener : listeners) {
+			listener.fontSizeChanged(fontSize);
+		}
 	}
 }
+

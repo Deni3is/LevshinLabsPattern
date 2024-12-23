@@ -9,15 +9,17 @@ public class Circle extends FillableShape {
 		this.filled = filled;
 	}
 
-	public void drawFilled(Graphics g) {
-		g.fillOval(getPosition().x, getPosition().y, getSize().x, getSize().y);
-	}
-
-	public void drawNonFilled(Graphics g) {
-		g.drawOval(getPosition().x, getPosition().y, getSize().x, getSize().y);
+	@Override
+	public ShapeType getType() {
+		return ShapeType.Circle;
 	}
 
 	public String toString() {
 		return "circ;" + super.toString();
+	}
+
+	@Override
+	public Circle clone() {
+		return (Circle) super.clone();
 	}
 }

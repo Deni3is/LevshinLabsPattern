@@ -16,7 +16,7 @@ public class Text extends Shape {
 	/**
 	 * Constructs a new Text shape and asks the user for the text with a dialog
 	 * box
-	 * 
+	 *
 	 * @param x
 	 *            x-coordinate
 	 * @param y
@@ -28,14 +28,17 @@ public class Text extends Shape {
 		super(new Point(x, y));
 		font = new Font(null, Font.PLAIN, fontSize);
 		text = JOptionPane.showInputDialog("Text to be inserted:");
+
 		if ((text == null) || (text.length() == 0)) {
 			throw new IllegalArgumentException("Empty text");
 		}
+
+		calculatePoint2();
 	}
 
 	/**
 	 * Constructs a new Text shape with the given string as the text.
-	 * 
+	 *
 	 * @param x
 	 *            x-coordinate
 	 * @param y
@@ -50,20 +53,39 @@ public class Text extends Shape {
 		font = new Font(null, Font.PLAIN, fontSize);
 		text = str;
 
+		calculatePoint2();
 	}
 
-	public void drawShape(Graphics g) {
-
-		g.setFont(font);
-		int w = g.getFontMetrics().stringWidth(text);
-		setPoint2(new Point(point1.x + w, point1.y - font.getSize()));
-		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g.drawString(text, point1.x, point1.y);
+	public String getText() {
+		return text;
 	}
 
 	public Font getFont() {
 		return font;
+	}
+
+	public Text setFont(int fontSize) {
+		Text clone = clone();
+		clone.font = new Font(null, Font.PLAIN, fontSize);
+		clone.calculatePoint2();
+		return clone;
+	}
+
+	public Text setText(String text) {
+		Text clone = clone();
+		clone.text = text;
+		clone.calculatePoint2();
+		return clone;
+	}
+
+	private void calculatePoint2() {
+		int w = (int) (this.getFont().getSize() * text.length() * 0.54);
+		point2 = new Point(this.getPoint1().x + w, this.getPoint1().y - this.getFont().getSize());
+	}
+
+	@Override
+	public ShapeType getType() {
+		return ShapeType.Text;
 	}
 
 	public String toString() {
@@ -71,4 +93,13 @@ public class Text extends Shape {
 				+ text.replace(';', '?');
 	}
 
+	public Text clone() {
+		Text clone = (Text) super.clone();
+
+		clone.font = font;
+		clone.text = text;
+
+		return clone;
+	}
 }
+

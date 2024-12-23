@@ -1,34 +1,35 @@
 package controller.actions;
 
-import model.Selection;
-import model.FillableShape;
-import model.Shape;
+import model.*;
 
 /**
  * Заливка выбранных фигур
  */
 public class FillAction implements DrawAction {
 
-	private Selection selection;
+	ImmutableSelection selected;
+	VectorDrawing d;
 
 	/**
-	 * Конструктор
-	 * @param selection - выбранные фигуры
+	 * Creates a FillAction that filps the fill status of all FillableShape
+	 * instances in the given selection.
+	 *
+	 * @param s
+	 *            a selection which contains the shapes to be modified
 	 */
-	public FillAction(Selection selection) {
-		this.selection = selection.clone();
+	public FillAction(ImmutableSelection s, VectorDrawing d) {
+		this.selected = s;
+		this.d = d;
 	}
 
-	public Boolean execute() {
-		Boolean checkForExecution = selection != null && !selection.isEmpty();
-		if (checkForExecution) {
-			for (Shape s : selection) {
-				if (s instanceof FillableShape fillableShape) {
-                    fillableShape.setFilled(!(fillableShape).getFilled());
-				}
-			}
+	public void execute() {
+		for (Shape s : selected) {
+			d.fillShape(s);
 		}
-		return checkForExecution;
+	}
+
+	public String getDescription() {
+		return null;
 	}
 
 	public void redo() {
@@ -37,10 +38,6 @@ public class FillAction implements DrawAction {
 
 	public void undo() {
 		execute();
-	}
-
-	public String getDescription() {
-		return null;
 	}
 
 }

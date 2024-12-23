@@ -1,31 +1,38 @@
 package controller.actions;
 
-import model.Drawing;
+import model.VectorDrawing;
 import model.Shape;
+
+import java.awt.*;
 
 /**
  * События добавления объекта на рисунов
  */
-public class AddAction implements DrawAction {
+public class AddAction implements DrawAction,MoveUpdate {
 
-	Shape shape;
-	Drawing drawing;
+	VectorDrawing d;
+	Shape s;
+
 	/**
-	 * Конструктор
-	 * @param drawing - полотно
-	 * @param shape - фигура
+	 * Creates an AddAction that adds the given Shape to the given Drawing.
+	 *
+	 * @param dr
+	 *            the drawing into which the shape should be added.
+	 * @param sh
+	 *            the shape to be added.
 	 */
-	public AddAction(Drawing drawing, Shape shape) {
-		this.drawing = drawing;
-		this.shape = shape;
+	public AddAction(VectorDrawing dr, Shape sh) {
+
+        this.d = dr;
+		this.s = sh;
 	}
 
-	public Boolean execute() {
-		Boolean checkForExecution = shape != null && drawing != null;
-		if (checkForExecution) {
-			drawing.insertShape(shape);
-		}
-		return checkForExecution;
+	public void execute() {
+		d.insertShape(s);
+	}
+
+	public String getDescription() {
+		return null;
 	}
 
 	public void redo() {
@@ -33,11 +40,11 @@ public class AddAction implements DrawAction {
 	}
 
 	public void undo() {
-		drawing.removeShape(shape);
+		d.removeShape(s);
 	}
 
-	public String getDescription() {
-		return null;
+	public AddAction moveUpdate(Point m) {
+		s = s.updatePoint2(m);
+		return this;
 	}
-
 }

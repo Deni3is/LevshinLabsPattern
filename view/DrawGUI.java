@@ -1,24 +1,27 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagLayout;
-import java.awt.Toolkit;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
-import model.Drawing;
+import view.adapters.AdapterFactory;
+import view.adapters.ShapeAdapter;
+import controller.StateAdapter;
+import model.DrawingListener;
+import model.Shape;
+import model.VectorDrawing;
 import controller.DrawingController;
 
 /**
  * Graphical user interface for the Drawing editor "Draw"
- * 
+ *
  * @author Alex Lagerstedt
- * 
+ *
  */
 
 public class DrawGUI extends JFrame {
@@ -26,28 +29,141 @@ public class DrawGUI extends JFrame {
 	/**
 	 * A simple container that contains a Drawing instance and keeps it
 	 * centered.
-	 * 
+	 *
 	 * @author Alex Lagerstedt
-	 * 
+	 *
 	 */
-	private class DrawingContainer extends JPanel {
+	public class DrawingContainer extends JPanel implements StateAdapter {
 
 		private static final long serialVersionUID = 0;
 
+		private ArrayList<ShapeAdapter> shapesAdapters;
+
 		public DrawingContainer() {
 			super(new GridBagLayout());
+			shapesAdapters = new ArrayList<ShapeAdapter>();
 		}
 
-		public void setDrawing(Drawing d) {
+		public void setDrawing(VectorDrawing d) {
 			this.removeAll();
-			this.add(d);
-			mouse = new MouseListener(controller, tools);
-			d.addMouseListener(mouse);
-			d.addMouseMotionListener(mouse);
-			setPreferredSize(d.getPreferredSize());
+			setBorder(BorderFactory.createLineBorder(Color.black));
+			setBackground(Color.WHITE);
+
+			shapesAdapters.clear();
+			setPreferredSize(new Dimension(500, 380));
+
+			if (mouse == null) {
+				mouse = new MouseListener(controller);
+				this.addMouseListener(mouse);
+				this.addMouseMotionListener(mouse);
+			}
+
+			d.addDrawingListener(new DrawingObserver());
 			pack();
 		}
 
+		public void paintComponent(Graphics g) {
+
+			super.paintComponent(g);
+			for (ShapeAdapter s : shapesAdapters) {
+				s.draw(g);
+			}
+		}
+
+		public BufferedImage getImage() {
+
+			BufferedImage bi = new BufferedImage(getPreferredSize().width,
+					getPreferredSize().height, BufferedImage.TYPE_INT_RGB);
+			Graphics g = bi.createGraphics();
+			this.print(g);
+			return bi;
+		}
+
+		private void appendShape(Shape shape) {
+			ShapeAdapter adapter = AdapterFactory.create(shape);
+
+			shapesAdapters.add(adapter);
+			repaint();
+		}
+
+		private void updateShape(Shape shape) {
+			ShapeAdapter adapter = AdapterFactory.create(shape);
+
+			shapesAdapters.remove(adapter);
+			shapesAdapters.add(adapter);
+			repaint();
+		}
+
+		private void deleteShape(Shape shape) {
+			ShapeAdapter adapter = AdapterFactory.create(shape);
+
+			shapesAdapters.remove(adapter);
+			repaint();
+		}
+
+		@Override
+		public void constructionStart(Shape shape) {
+			appendShape(shape);
+			System.out.println("start");
+		}
+
+		@Override
+		public void constructionUpdate(Shape shape) {
+			updateShape(shape);
+			System.out.println("update");
+		}
+
+		@Override
+		public void constructionEnd(Shape shape) {
+			deleteShape(shape);
+			System.out.println("end");
+		}
+
+		@Override
+		public String getTextInput(String title) {
+			return JOptionPane.showInputDialog(title);
+		}
+
+		@Override
+		public void writeImgToFile(File file) {
+			try {
+				controller.getDrawing().emptySelection();
+				BufferedImage bi = this.getImage(); // retrieve image
+				ImageIO.write(bi, "png", file);
+			}
+			catch (IOException e) {
+			}
+		}
+
+		private class DrawingObserver implements DrawingListener {
+
+			@Override
+			public void shapeAppended(Shape s) {
+				appendShape(s);
+			}
+
+			@Override
+			public void shapeDeleted(Shape s) {
+				deleteShape(s);
+			}
+
+			@Override
+			public void shapeUpdated(Shape s) {
+				updateShape(s);
+			}
+
+			@Override
+			public void shapeAppendedToSelection(Shape s) {
+				updateShape(s);
+			}
+
+			@Override
+			public void selectionCleared(ArrayList<Shape> shapes) {
+				for (Shape s : shapes) {
+					updateShape(s);
+				}
+			}
+		}
 	}
 
 	public class StatusBar extends JLabel {
@@ -93,9 +209,9 @@ public class DrawGUI extends JFrame {
 		drawingContainer = new DrawingContainer();
 		scrollpane = new JScrollPane(drawingContainer);
 
-		controller = new DrawingController(this);
+		controller = new DrawingController(this, drawingContainer);
+		controller.newDrawing();
 		tools = new ToolBox(controller);
-		controller.newDrawing(new Dimension(500, 380));
 
 		// statusBar = new StatusBar();
 
@@ -125,4 +241,10 @@ public class DrawGUI extends JFrame {
 		pack();
 		repaint();
 	}
+
+	public DrawingContainer getDrawingContainer() {
+		return drawingContainer;
+	}
 }
+
+

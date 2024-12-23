@@ -5,18 +5,17 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
+import java.awt.*;
+
 public class Line extends Shape {
 
 	public Line(int x, int y) {
 		super(new Point(x, y));
 	}
 
-	public void drawShape(Graphics g) {
-
-		((Graphics2D) g).setStroke(new BasicStroke((float) strokeWidth));
-
-		g.drawLine(point1.x, point1.y, point2.x, point2.y);
-
+	@Override
+	public ShapeType getType() {
+		return ShapeType.Line;
 	}
 
 	@Override
@@ -24,4 +23,8 @@ public class Line extends Shape {
 		return "line;" + super.toString();
 	}
 
+	@Override
+	public Line clone() {
+		return (Line) super.clone();
+	}
 }

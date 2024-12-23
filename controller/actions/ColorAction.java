@@ -2,6 +2,7 @@ package controller.actions;
 
 import model.Selection;
 import model.Shape;
+import model.VectorDrawing;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -12,32 +13,32 @@ import java.util.Map;
  */
 public class ColorAction implements DrawAction {
 
-	private Map<Shape, Color> oldColors = new HashMap<>();
+	Shape shape;
 
-	private Color newColor;
-	private Selection selection;
+	Color oldColor;
+	Color newColor;
+
+	VectorDrawing d;
 
 	/**
-	 * Конструктор
-	 * @param selection - выбранные фигуры
-	 * @param newColor - новый цвет
+	 * Creates an ColorAction that changes the color of a given Shape.
+	 *
+	 * @param s
+	 *            the shape to be modified.
+	 * @param newColor
+	 *            the new color for the shape.
 	 */
-	public ColorAction(Selection selection, Color newColor) {
-		this.selection = selection.clone();
-		this.selection.forEach(item -> {
-			this.oldColors.put(item, item.getColor());
-		});
+	public ColorAction(Shape s, Color newColor, VectorDrawing d) {
+		shape = s;
+		this.oldColor = s.getColor();
 		this.newColor = newColor;
+		this.d = d;
 	}
 
-	public Boolean execute() {
-		Boolean checkForExecution = selection != null && !selection.isEmpty() && newColor != null;
-		if (checkForExecution) {
-			this.selection.forEach(item -> {
-					item.setColor(newColor);
-			});
-		}
-		return checkForExecution;
+	public void execute() { d.colorShape(shape, newColor); }
+
+	public String getDescription() {
+		return null;
 	}
 
 	public void redo() {
@@ -45,13 +46,7 @@ public class ColorAction implements DrawAction {
 	}
 
 	public void undo() {
-		this.selection.forEach(item -> {
-			item.setColor(this.oldColors.get(item));
-		});
-	}
-
-	public String getDescription() {
-		return null;
+		d.colorShape(shape, oldColor);
 	}
 
 }

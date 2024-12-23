@@ -1,6 +1,7 @@
 package controller.actions;
 
-import model.Drawing;
+import model.ImmutableSelection;
+import model.VectorDrawing;
 import model.Selection;
 import model.Shape;
 
@@ -9,26 +10,33 @@ import model.Shape;
  */
 public class DeleteAction implements DrawAction {
 
-	private Drawing drawing;
-	private Selection selection;
+	VectorDrawing d;
+	ImmutableSelection selection;
+
+	int position;
+
 	/**
-	 * Конструктор
-	 * @param drawing - полотно
-	 * @param selection - выбранные фигуры
+	 * Creates an DeleteAction that removes all shapes in the given Selection
+	 * from the given Drawing.
+	 *
+	 * @param drawing
+	 *            the drawing into which the shape should be added.
+	 * @param selection
+	 *            the shape to be added.
 	 */
-	public DeleteAction(Drawing drawing, Selection selection){
-		this.drawing = drawing;
-		this.selection = selection.clone();
+	public DeleteAction(VectorDrawing drawing, ImmutableSelection selection) {
+		this.selection = selection;
+		this.d = drawing;
 	}
 
-	public Boolean execute() {
-		Boolean checkForExecution = selection != null && !selection.isEmpty() && drawing != null;
-		if (checkForExecution) {
-			for (Shape s : selection) {
-				drawing.removeShape(s);
-			}
+	public void execute() {
+		for (Shape s : selection) {
+			d.removeShape(s);
 		}
-		return checkForExecution;
+	}
+
+	public String getDescription() {
+		return null;
 	}
 
 	public void redo() {
@@ -37,12 +45,8 @@ public class DeleteAction implements DrawAction {
 
 	public void undo() {
 		for (Shape s : selection) {
-			drawing.insertShape(s);
+			d.insertShape(s);
 		}
-	}
-
-	public String getDescription() {
-		return null;
 	}
 
 }

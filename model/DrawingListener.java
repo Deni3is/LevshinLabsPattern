@@ -1,15 +1,16 @@
 package model;
+import java.util.ArrayList;
 
 public interface DrawingListener {
 
-public void shapeAppend(Shape shape);
+public void shapeAppended(Shape shape);
 
 public void shapeDeleted(Shape shape);
 
 public void shapeUpdated(Shape shape);
 
-public void shapeAppendToSelection(Shape shape);
+public void shapeAppendedToSelection(Shape shape);
 
-public void shapeRemovedFromSelection(Shape shape);
+public void selectionCleared(ArrayList<Shape> shapes);
 
 }

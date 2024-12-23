@@ -6,66 +6,28 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-public abstract class Shape {
+public abstract class Shape implements Cloneable {
 
 	protected Point point1;
 	protected Point point2;
 
 	protected Color color;
 	protected double strokeWidth;
-	protected boolean selected;
+
+	protected boolean isSelected;
+
+	private static int lastId = 0;
+	private int id;
 
 	public Shape(Point p) {
 		point1 = p;
 		point2 = new Point(p.x + 25, p.y + 25);
 		color = Color.BLACK;
-		selected = false;
 		strokeWidth = 2;
+		isSelected = false;
+		id = lastId;
+		lastId++;
 	}
-
-	public void draw(Graphics g) {
-		g.setColor(color);
-		drawShape(g);
-		if (selected) {
-			drawSelectionIndicator(g);
-		}
-	}
-
-	public void drawSelectionIndicator(Graphics g) {
-
-		((Graphics2D) g).setStroke(new BasicStroke((float) 1.0));
-		g.setColor(new Color(255, 0, 255));
-
-		int len = 10;
-		int off = 5;
-
-		Point p1 = getPosition();
-		Point p2 = new Point(getPosition().x + getSize().x, getPosition().y
-				+ getSize().y);
-
-		g.drawPolyline(
-				// left up
-				new int[] { p1.x - off, p1.x - off, p1.x - off + len },
-				new int[] { p1.y - off + len, p1.y - off, p1.y - off }, 3);
-
-		g.drawPolyline(
-				// right down
-				new int[] { p2.x + off - len, p2.x + off, p2.x + off },
-				new int[] { p2.y + off, p2.y + off, p2.y + off - len }, 3);
-
-		g.drawPolyline(
-				// right up
-				new int[] { p2.x + off - len, p2.x + off, p2.x + off },
-				new int[] { p1.y - off, p1.y - off, p1.y - off + len }, 3);
-
-		g.drawPolyline(
-				// left down
-				new int[] { p1.x - off, p1.x - off, p1.x - off + len },
-				new int[] { p2.y + off - len, p2.y + off, p2.y + off }, 3);
-
-	}
-
-	public abstract void drawShape(Graphics g);
 
 	public Color getColor() {
 		return color;
@@ -81,10 +43,28 @@ public abstract class Shape {
 				- point1.y));
 	}
 
+	public Point getPoint1() {
+		return (Point) point1.clone();
+	}
+
+	public Point getPoint2() {
+		return (Point) point2.clone();
+	}
+
+	public abstract ShapeType getType();
+
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	public double getStrokeWidth() {
+		return strokeWidth;
+	}
+
 	/**
 	 * Checks if the Shape contains the given point. Has a 2 pixel margin in all
 	 * directions.
-	 * 
+	 *
 	 * @param p
 	 *            point to check
 	 * @return true if shape includes given point
@@ -99,27 +79,44 @@ public abstract class Shape {
 		return false;
 	}
 
-	public void move(int x, int y) {
-		point1.x = point1.x + x;
-		point1.y = point1.y + y;
-		point2.x = point2.x + x;
-		point2.y = point2.y + y;
+	public Shape move(int x, int y) {
+		Shape shape = clone();
+		shape.point1 = new Point(point1.x + x, point1.y + y);
+		shape.point2 = new Point(point2.x + x, point2.y + y);
+
+		return shape;
 	}
 
-	public void setColor(Color c) {
-		color = c;
+	public Shape setColor(Color c) {
+		Shape shape = clone();
+		shape.color = c;
+
+		return shape;
 	}
 
-	public void setPoint1(Point p) {
-		this.point1 = p;
+	public Shape setPoint1(Point p) {
+		Shape shape = clone();
+		shape.point1 = p;
+
+		return shape;
 	}
 
-	public void setPoint2(Point p) {
-		this.point2 = p;
+	public Shape setPoint2(Point p) {
+		Shape shape = clone();
+		shape.point2 = p;
+
+		return shape;
 	}
 
-	public void setSelected(boolean b) {
-		selected = b;
+	public Shape updatePoint2(Point m) {
+		return this.setPoint2(new Point(this.point2.x + m.x, this.point2.y + m.y));
+	}
+
+	public Shape setSelected(boolean isSelected) {
+		Shape shape = clone();
+		shape.isSelected = isSelected;
+
+		return shape;
 	}
 
 	public String toString() {
@@ -128,8 +125,42 @@ public abstract class Shape {
 		str += ";" + point2.x;
 		str += "," + point2.y;
 		str += ";" + color.getRGB();
-
 		return str;
+
 	}
 
+	@Override
+	public Shape clone() {
+		try {
+			Shape clone = (Shape) super.clone();
+
+			clone.id = id;
+			clone.point1 = (Point) point1.clone();
+			clone.point2 = (Point) point2.clone();
+			clone.strokeWidth = strokeWidth;
+			clone.color = color;
+
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			throw new AssertionError();
+		}
+	}
+
+	public Shape copy() {
+		Shape copy = clone();
+
+		id = lastId;
+		lastId++;
+
+		return copy;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Shape) {
+			return ((Shape) obj).id == id && ((Shape) obj).getType() == getType();
+		}
+
+		return false;
+	}
 }
