@@ -97,9 +97,9 @@ public class UndoManager {
 	}
 
 	public void updateMoveUpdatableAction(Point m) {
-		if (lastAction instanceof MoveUpdate) {
+		if (lastAction instanceof MergeableAction) {
 			lastAction.undo();
-			lastAction = ((MoveUpdate) lastAction).moveUpdate(m);
+			lastAction = ((MergeableAction) lastAction).moveUpdate(m);
 			lastAction.execute();
 		} else {
 //			throw new IllegalStateException();

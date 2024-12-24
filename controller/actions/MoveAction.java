@@ -8,7 +8,7 @@ import java.awt.*;
 /**
  * Перемещение выбранных фигур
  */
-public class MoveAction implements DrawAction,MoveUpdate {
+public class MoveAction implements DrawAction,MergeableAction {
 
 	Iterable<Shape>  selected;
 	Point movement;

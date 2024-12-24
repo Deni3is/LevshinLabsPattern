@@ -8,7 +8,7 @@ import java.awt.*;
 /**
  * События добавления объекта на рисунов
  */
-public class AddAction implements DrawAction,MoveUpdate {
+public class AddAction implements DrawAction,MergeableAction {
 
 	Drawing d;
 	Shape s;

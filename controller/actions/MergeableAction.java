@@ -1,11 +1,8 @@
 package controller.actions;
 
+import java.awt.*;
+
 public interface MergeableAction {
 
-    Boolean merge(MergeableAction action);
-
-    void stopMerge();
-
-    Boolean canMerge();
-
+    public DrawAction moveUpdate(Point m);
 }
