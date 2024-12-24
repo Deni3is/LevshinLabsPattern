@@ -1,10 +1,10 @@
-package model;
+package model.objects;
+
+import model.shapes.Shape;
+import model.shapes.ShapeType;
 
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.RenderingHints;
 
 import javax.swing.JOptionPane;
 

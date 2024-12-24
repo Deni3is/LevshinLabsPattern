@@ -1,4 +1,6 @@
 package model;
+import model.shapes.Shape;
+
 import java.util.ArrayList;
 
 public interface DrawingListener {

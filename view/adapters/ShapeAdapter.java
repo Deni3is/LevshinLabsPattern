@@ -1,5 +1,10 @@
 package view.adapters;
-import model.Shape;
+import model.objects.Circle;
+import model.objects.Line;
+import model.shapes.Shape;
+import model.objects.Text;
+import model.objects.Rectangle;
+
 import java.awt.*;
 
 public abstract class ShapeAdapter {
@@ -61,5 +66,27 @@ public abstract class ShapeAdapter {
 
         return false;
     }
+
+    static public ShapeAdapter adaptation (Shape s){
+
+        switch (s.getType()) {
+            case Line -> {
+                return new LineAdapter((Line) s);
+            }
+            case Text -> {
+                return new TextAdapter((Text) s);
+            }
+            case Circle -> {
+                return new CircleAdapter((Circle) s);
+            }
+            case Rectangle -> {
+                return new RectangleAdapter((Rectangle) s);
+            }
+        }
+        return null;
+    }
+
+
+
 }
 

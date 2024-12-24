@@ -1,6 +1,5 @@
 package view.adapters;
-import model.FillableShape;
-import model.Shape;
+import model.shapes.FillableShape;
 
 import java.awt.*;
 

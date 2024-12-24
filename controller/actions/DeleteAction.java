@@ -1,17 +1,15 @@
 package controller.actions;
 
-import model.ImmutableSelection;
-import model.VectorDrawing;
-import model.Selection;
-import model.Shape;
+import model.Drawing;
+import model.shapes.Shape;
 
 /**
  * Удаление выбранных фигур с рисунка
  */
 public class DeleteAction implements DrawAction {
 
-	VectorDrawing d;
-	ImmutableSelection selection;
+	Drawing d;
+	Iterable<Shape> selection;
 
 	int position;
 
@@ -24,7 +22,7 @@ public class DeleteAction implements DrawAction {
 	 * @param selection
 	 *            the shape to be added.
 	 */
-	public DeleteAction(VectorDrawing drawing, ImmutableSelection selection) {
+	public DeleteAction(Drawing drawing, Iterable<Shape>  selection) {
 		this.selection = selection;
 		this.d = drawing;
 	}

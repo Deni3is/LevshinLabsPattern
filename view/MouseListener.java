@@ -1,10 +1,6 @@
 package view;
 
 import controller.DrawingController;
-import controller.Tool;
-import model.Rectangle;
-import model.Shape;
-import model.*;
 
 import java.awt.*;
 import java.awt.event.InputEvent;

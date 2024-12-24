@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import view.adapters.AdapterFactory;
+
 import view.adapters.ShapeAdapter;
 import controller.StateAdapter;
 import model.DrawingListener;
-import model.Shape;
-import model.VectorDrawing;
+import model.shapes.Shape;
+import model.Drawing;
 import controller.DrawingController;
 
 /**
@@ -44,7 +44,7 @@ public class DrawGUI extends JFrame {
 			shapesAdapters = new ArrayList<ShapeAdapter>();
 		}
 
-		public void setDrawing(VectorDrawing d) {
+		public void setDrawing(Drawing d) {
 			this.removeAll();
 			setBorder(BorderFactory.createLineBorder(Color.black));
 			setBackground(Color.WHITE);
@@ -80,14 +80,14 @@ public class DrawGUI extends JFrame {
 		}
 
 		private void appendShape(Shape shape) {
-			ShapeAdapter adapter = AdapterFactory.create(shape);
+			ShapeAdapter adapter = ShapeAdapter.adaptation(shape);
 
 			shapesAdapters.add(adapter);
 			repaint();
 		}
 
 		private void updateShape(Shape shape) {
-			ShapeAdapter adapter = AdapterFactory.create(shape);
+			ShapeAdapter adapter = ShapeAdapter.adaptation(shape);
 
 			shapesAdapters.remove(adapter);
 			shapesAdapters.add(adapter);
@@ -95,7 +95,7 @@ public class DrawGUI extends JFrame {
 		}
 
 		private void deleteShape(Shape shape) {
-			ShapeAdapter adapter = AdapterFactory.create(shape);
+			ShapeAdapter adapter = ShapeAdapter.adaptation(shape);
 
 			shapesAdapters.remove(adapter);
 			repaint();

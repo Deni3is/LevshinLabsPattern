@@ -1,11 +1,9 @@
-package model;
+package model.objects;
 
-import java.awt.BasicStroke;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import model.shapes.Shape;
+import model.shapes.ShapeType;
+
 import java.awt.Point;
-
-import java.awt.*;
 
 public class Line extends Shape {
 

@@ -2,13 +2,13 @@ package controller.states;
 
 import controller.DrawingController;
 import controller.actions.MoveAction;
-import model.FillableShape;
-import model.Shape;
-import model.Text;
+import model.shapes.FillableShape;
+import model.shapes.Shape;
+import model.objects.Text;
 
 import java.awt.*;
 
-public class SelectState extends DrawingState {
+public class SelectState extends ActionState {
     public SelectState(DrawingController c) {
         super(c);
     }

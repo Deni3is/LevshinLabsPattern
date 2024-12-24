@@ -1,6 +1,6 @@
 package view.adapters;
 
-import model.Text;
+import model.objects.Text;
 
 import java.awt.*;
 

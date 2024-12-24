@@ -1,5 +1,5 @@
 package controller;
-import model.Shape;
+import model.shapes.Shape;
 import java.io.File;
 
 

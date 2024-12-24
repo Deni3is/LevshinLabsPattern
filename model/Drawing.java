@@ -1,19 +1,21 @@
 package model;
 
+import model.objects.Circle;
+import model.objects.Line;
+import model.objects.Rectangle;
+import model.objects.Text;
+import model.shapes.FillableShape;
+import model.shapes.Shape;
+import model.shapes.ShapeType;
+
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-
-public class VectorDrawing implements Iterable<Shape> {
+public class Drawing implements Iterable<Shape> {
 
 	private static final long serialVersionUID = 0;
 
@@ -23,7 +25,7 @@ public class VectorDrawing implements Iterable<Shape> {
 
 	private HashMap<ShapeType, Shape> prototypes;
 
-	public VectorDrawing() {
+	public Drawing() {
 		shapes = new ArrayList<Shape>();
 		listeners = new ArrayList<DrawingListener>();
 
@@ -140,7 +142,7 @@ public class VectorDrawing implements Iterable<Shape> {
 		fireShapeDeleted(s);
 	}
 
-	public ImmutableSelection getSelection() {
+	public Selection  getSelection() {
 		Selection selection = new Selection();
 
 		for (Shape shape : shapes) {

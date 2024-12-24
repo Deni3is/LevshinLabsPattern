@@ -1,10 +1,7 @@
 package controller.actions;
 
-import controller.DrawingController;
-import model.ImmutableSelection;
-import model.Selection;
-import model.Shape;
-import model.VectorDrawing;
+import model.shapes.Shape;
+import model.Drawing;
 
 import java.awt.*;
 
@@ -13,10 +10,10 @@ import java.awt.*;
  */
 public class MoveAction implements DrawAction,MoveUpdate {
 
-	ImmutableSelection selected;
+	Iterable<Shape>  selected;
 	Point movement;
 
-	VectorDrawing d;
+	Drawing d;
 
 	/**
 	 * Creates a MoveAction that moves all Shapes in the given Selection in the
@@ -29,7 +26,7 @@ public class MoveAction implements DrawAction,MoveUpdate {
 	 *            the amount the shapes should be moved, relative to the
 	 *            original position
 	 */
-	public MoveAction(ImmutableSelection s, Point m, VectorDrawing d) {
+	public MoveAction(Iterable<Shape>  s, Point m, Drawing d) {
 		this.selected = s;
 		this.movement = m;
 		this.d = d;

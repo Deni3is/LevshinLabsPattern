@@ -1,6 +1,7 @@
-package model;
+package model.objects;
 
-import java.awt.Graphics;
+import model.shapes.FillableShape;
+import model.shapes.ShapeType;
 
 public class Rectangle extends FillableShape {
 

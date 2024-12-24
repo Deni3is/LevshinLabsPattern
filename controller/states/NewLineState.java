@@ -3,12 +3,11 @@ package controller.states;
 import controller.DrawingController;
 import controller.actions.AddAction;
 import controller.actions.DrawAction;
-import model.Line;
-import model.Shape;
-import model.ShapeType;
+import model.shapes.Shape;
+import model.shapes.ShapeType;
 import java.awt.*;
 
-public class NewLineState extends DrawingState {
+public class NewLineState extends ActionState {
     public NewLineState(DrawingController c) {
         super(c);
     }

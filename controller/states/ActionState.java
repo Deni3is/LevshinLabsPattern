@@ -6,12 +6,12 @@ import controller.actions.DeleteAction;
 import controller.actions.FillAction;
 import controller.actions.ColorAction;
 import controller.actions.DrawAction;
-import model.Shape;
+import model.shapes.Shape;
 
-public abstract class DrawingState {
+public abstract class ActionState {
     protected DrawingController controller;
 
-    public DrawingState(DrawingController c) {
+    public ActionState(DrawingController c) {
         controller = c;
     }
 

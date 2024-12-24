@@ -3,13 +3,12 @@ package controller.states;
 import controller.DrawingController;
 import controller.actions.AddAction;
 import controller.actions.DrawAction;
-import model.Shape;
-import model.Text;
-import model.ShapeType;
+import model.objects.Text;
+import model.shapes.ShapeType;
 
 import java.awt.*;
 
-public class NewTextState extends DrawingState {
+public class NewTextState extends ActionState {
     public NewTextState(DrawingController c) {
         super(c);
     }

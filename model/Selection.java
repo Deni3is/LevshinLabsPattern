@@ -1,9 +1,11 @@
 package model;
 
+import model.shapes.Shape;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Selection implements ImmutableSelection {
+public class Selection implements Iterable<Shape> {
 
 	private ArrayList<Shape> selected;
 

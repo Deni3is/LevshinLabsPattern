@@ -2,13 +2,13 @@ package controller.states;
 import controller.DrawingController;
 import controller.actions.AddAction;
 import controller.actions.DrawAction;
-import model.Circle;
+import model.objects.Circle;
 import java.awt.*;
-import model.Shape;
-import model.ShapeType;
+import model.shapes.Shape;
+import model.shapes.ShapeType;
 
 
-public class NewCircleState extends DrawingState {
+public class NewCircleState extends ActionState {
     public NewCircleState(DrawingController c) {
         super(c);
     }

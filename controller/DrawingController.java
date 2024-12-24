@@ -1,13 +1,11 @@
 package controller;
 
 import controller.states.*;
-import model.ImmutableSelection;
-import model.VectorDrawing;
 import model.Selection;
+import model.Drawing;
 import controller.actions.*;
 import controller.actions.DrawAction;
 import view.DrawGUI;
-import model.Shape;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -15,7 +13,7 @@ import java.util.HashMap;
 
 public class DrawingController {
 
-	private VectorDrawing drawing;
+	private Drawing drawing;
 	private UndoManager undoManager;
 
 	private DrawGUI gui;
@@ -28,7 +26,7 @@ public class DrawingController {
 	private ArrayList<DrawingControllerListener> listeners;
 	private StateAdapter stateAdapter;
 
-	private HashMap<Tool, DrawingState> states;
+	private HashMap<Tool, ActionState> states;
 
 	public DrawingController(DrawGUI g, StateAdapter adapter) {
 		drawing = null;
@@ -37,7 +35,7 @@ public class DrawingController {
 		tool = Tool.LINE;
 		stateAdapter = adapter;
 
-		states = new HashMap<Tool, DrawingState>();
+		states = new HashMap<Tool, ActionState>();
 
 		states.put(Tool.SELECT, new SelectState(this));
 		states.put(Tool.CIRCLE, new NewCircleState(this));
@@ -49,11 +47,11 @@ public class DrawingController {
 		listeners = new ArrayList<DrawingControllerListener>();
 	}
 
-	public VectorDrawing getDrawing() {
+	public Drawing getDrawing() {
 		return drawing;
 	}
 
-	public ImmutableSelection getSelection() {
+	public Selection getSelection() {
 		return drawing.getSelection();
 	}
 
@@ -66,7 +64,7 @@ public class DrawingController {
 		undoManager.addAction(action);
 	}
 
-	public DrawingState getState() {
+	public ActionState getState() {
 		return states.get(tool);
 	}
 
@@ -117,7 +115,7 @@ public class DrawingController {
 	}
 
 	public void newDrawing() {
-		drawing = new VectorDrawing();
+		drawing = new Drawing();
 		undoManager = new UndoManager();
 		if (gui != null) {
 			gui.updateDrawing();

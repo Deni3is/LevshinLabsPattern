@@ -1,7 +1,7 @@
 package controller.actions;
 
-import model.VectorDrawing;
-import model.Shape;
+import model.Drawing;
+import model.shapes.Shape;
 
 import java.awt.*;
 
@@ -10,7 +10,7 @@ import java.awt.*;
  */
 public class AddAction implements DrawAction,MoveUpdate {
 
-	VectorDrawing d;
+	Drawing d;
 	Shape s;
 
 	/**
@@ -21,7 +21,7 @@ public class AddAction implements DrawAction,MoveUpdate {
 	 * @param sh
 	 *            the shape to be added.
 	 */
-	public AddAction(VectorDrawing dr, Shape sh) {
+	public AddAction(Drawing dr, Shape sh) {
 
         this.d = dr;
 		this.s = sh;

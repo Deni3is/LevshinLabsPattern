@@ -1,9 +1,7 @@
 package controller;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,10 +9,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import model.*;
+import model.objects.Circle;
+import model.objects.Rectangle;
+import model.objects.Text;
+import model.shapes.Shape;
+import model.shapes.ShapeType;
 
 public class DrawIO {
 
@@ -110,7 +112,7 @@ public class DrawIO {
 	}
 
 	public void save(File f, DrawingController c) {
-		VectorDrawing d = c.getDrawing();
+		Drawing d = c.getDrawing();
 
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(f));

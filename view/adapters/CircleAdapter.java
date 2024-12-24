@@ -1,6 +1,6 @@
 package view.adapters;
 
-import model.Circle;
+import model.objects.Circle;
 
 import java.awt.*;
 

@@ -1,8 +1,5 @@
-package model;
+package model.shapes;
 
-import java.awt.BasicStroke;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 
 public abstract class FillableShape extends Shape {

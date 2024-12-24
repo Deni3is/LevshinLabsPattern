@@ -3,13 +3,13 @@ package controller.states;
 import controller.DrawingController;
 import controller.actions.AddAction;
 import controller.actions.DrawAction;
-import model.Rectangle;
-import model.Shape;
-import model.ShapeType;
+import model.objects.Rectangle;
+import model.shapes.Shape;
+import model.shapes.ShapeType;
 
 import java.awt.*;
 
-public class NewRectangleState extends DrawingState {
+public class NewRectangleState extends ActionState {
     public NewRectangleState(DrawingController c) {
         super(c);
     }

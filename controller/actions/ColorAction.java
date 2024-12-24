@@ -1,12 +1,9 @@
 package controller.actions;
 
-import model.Selection;
-import model.Shape;
-import model.VectorDrawing;
+import model.shapes.Shape;
+import model.Drawing;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Меняет цвет выбранных фигур
@@ -18,7 +15,7 @@ public class ColorAction implements DrawAction {
 	Color oldColor;
 	Color newColor;
 
-	VectorDrawing d;
+	Drawing d;
 
 	/**
 	 * Creates an ColorAction that changes the color of a given Shape.
@@ -28,7 +25,7 @@ public class ColorAction implements DrawAction {
 	 * @param newColor
 	 *            the new color for the shape.
 	 */
-	public ColorAction(Shape s, Color newColor, VectorDrawing d) {
+	public ColorAction(Shape s, Color newColor, Drawing d) {
 		shape = s;
 		this.oldColor = s.getColor();
 		this.newColor = newColor;

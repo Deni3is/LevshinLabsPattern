@@ -1,7 +1,6 @@
 package view.adapters;
 
-import model.FillableShape;
-import model.Rectangle;
+import model.objects.Rectangle;
 
 import java.awt.*;
 

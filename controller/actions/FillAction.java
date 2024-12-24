@@ -1,14 +1,15 @@
 package controller.actions;
 
 import model.*;
+import model.shapes.Shape;
 
 /**
  * Заливка выбранных фигур
  */
 public class FillAction implements DrawAction {
 
-	ImmutableSelection selected;
-	VectorDrawing d;
+	Iterable<Shape> selected;
+	Drawing d;
 
 	/**
 	 * Creates a FillAction that filps the fill status of all FillableShape
@@ -17,7 +18,7 @@ public class FillAction implements DrawAction {
 	 * @param s
 	 *            a selection which contains the shapes to be modified
 	 */
-	public FillAction(ImmutableSelection s, VectorDrawing d) {
+	public FillAction(Iterable<Shape> s, Drawing d) {
 		this.selected = s;
 		this.d = d;
 	}

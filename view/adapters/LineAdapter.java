@@ -1,6 +1,6 @@
 package view.adapters;
 
-import model.Line;
+import model.objects.Line;
 
 import java.awt.*;
 
